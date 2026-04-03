@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Album 2 — Gallery</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta
+			name="description"
+			content="Album 2 — Photo gallery with viewer, zoom/pan, theme toggle, overview and help"
+		/>
+
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+			rel="stylesheet"
+		/>
+		<link href="gallery1style.css" rel="stylesheet" />
+
+		<script
+			src="https://unpkg.com/@panzoom/panzoom@9.5.1/dist/panzoom.min.js"
+			defer
+		></script>
+
+		<style>
+			.album-header {
+				display: flex;
+				align-items: center;
+				justify-content: flex-start;
+				gap: 12px;
+				padding: 20px 24px 0 24px;
+			}
+
+			.back-btn {
+				font-size: 32px;
+				text-decoration: none;
+				color: var(--text, #fff);
+				line-height: 1;
+			}
+
+			.album-header h1 {
+				margin: 0;
+				font-size: 2rem;
+				font-weight: 600;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="ovw-wrapper" aria-hidden="false">
+			<button
+				id="ovwToggle"
+				class="ovw-toggle"
+				aria-controls="ovw-panel"
+				aria-expanded="false"
+				aria-label="Toggle overview"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 24"
+					width="18"
+					height="18"
+					aria-hidden="true"
+				>
+					<circle cx="12" cy="12" r="10" fill="currentColor" />
+					<rect x="6" y="11" width="12" height="2" fill="#fff" />
+				</svg>
+			</button>
+			<div class="ovw-label">Overview</div>
+		</div>
+
+		<div id="ovwBackdrop" class="ovw-backdrop" hidden></div>
+
+		<aside
+			id="ovw-panel"
+			class="ovw-panel"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="ovw-header"
+			hidden
+		>
+			<header class="ovw-header">
+				<h2 id="ovw-header">Overview</h2>
+			</header>
+
+			<div class="ovw-content">
+				<nav aria-label="overview links" class="mb-3">
+					<ul style="list-style: none; padding-left: 0; margin: 0">
+						<li><a href="gallery1.html" class="btn btn-link">Home</a></li>
+						<li><a href="images.html" class="btn btn-link">Images</a></li>
+						<li>
+							<button id="openHelpFromOverview" class="btn btn-link">
+								Help & Shortcuts
+							</button>
+						</li>
+					</ul>
+				</nav>
+
+				<hr />
+
+				<section aria-labelledby="ovw-quick">
+					<h3 id="ovw-quick" style="font-size: 0.95rem; margin-bottom: 0.5rem">
+						Quick Actions
+					</h3>
+					<ul style="list-style: none; padding-left: 0; color: var(--muted)">
+						<li><small>Open image: Enter or Click</small></li>
+						<li><small>Zoom: + / − / Mouse wheel</small></li>
+						<li><small>Fullscreen (image): Click ⤢ or press F</small></li>
+						<li><small>Toggle theme: T</small></li>
+						<li><small>Open help: H</small></li>
+					</ul>
+				</section>
+			</div>
+		</aside>
+
+		<div class="controls-row">
+			<div class="controls-inner">
+				<button
+					id="openHelpBtn"
+					class="btn btn-sm btn-outline-light"
+					title="Help (H)"
+					aria-label="Open help"
+				>
+					<i class="fa fa-circle-question" aria-hidden="true"></i>
+				</button>
+
+				<button
+					id="pageThemeToggle"
+					class="btn btn-sm btn-outline-light custom-toggle"
+					aria-pressed="false"
+					title="Toggle theme"
+				>
+					<i id="themeIcon" class="fa" aria-hidden="true"></i>
+					<span class="visually-hidden-inline">Toggle theme</span>
+				</button>
+			</div>
+		</div>
+
+		<div
+			id="posterCarousel"
+			class="carousel slide mb-5"
+			data-bs-ride="carousel"
+		>
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+					<img src="images/stock1.jpg" class="d-block w-100" alt="Poster 1" />
+				</div>
+				<div class="carousel-item">
+					<img src="images/stock2.jpg" class="d-block w-100" alt="Poster 2" />
+				</div>
+				<div class="carousel-item">
+					<img src="images/stock3.jpg" class="d-block w-100" alt="Poster 3" />
+				</div>
+				<div class="carousel-item">
+					<img src="images/stock4.jpg" class="d-block w-100" alt="Poster 4" />
+				</div>
+				<div class="carousel-item">
+					<img src="images/stock5.jpg" class="d-block w-100" alt="Poster 5" />
+				</div>
+			</div>
+			<button
+				class="carousel-control-prev"
+				type="button"
+				data-bs-target="#posterCarousel"
+				data-bs-slide="prev"
+			>
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button
+				class="carousel-control-next"
+				type="button"
+				data-bs-target="#posterCarousel"
+				data-bs-slide="next"
+			>
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
+
+		<div class="album-header">
+			<a href="gallery1.html" class="back-btn">🡨</a>
+			<h1>Album 2</h1>
+		</div>
+
+		<main class="container gallery">
+			<div class="row g-3">
+				<div class="col-6 col-md-4 col-lg-3">
+					<img
+						src="images/stock12.jpg"
+						class="img-thumbnail m-2"
+						data-bs-image="images/stock12.jpg"
+						data-bs-title="River"
+						alt="Stock 12"
+					/>
+				</div>
+				<div class="col-6 col-md-4 col-lg-3">
+					<img
+						src="images/stock13.jpg"
+						class="img-thumbnail m-2"
+						data-bs-image="images/stock13.jpg"
+						data-bs-title="Forest"
+						alt="Stock 13"
+					/>
+				</div>
+				<div class="col-6 col-md-4 col-lg-3">
+					<img
+						src="images/stock14.jpg"
+						class="img-thumbnail m-2"
+						data-bs-image="images/stock14.jpg"
+						data-bs-title="Lake"
+						alt="Stock 14"
+					/>
+				</div>
+				<div class="col-6 col-md-4 col-lg-3">
+					<img
+						src="images/stock15.jpg"
+						class="img-thumbnail m-2"
+						data-bs-image="images/stock15.jpg"
+						data-bs-title="Barren Mountains"
+						alt="Stock 15"
+					/>
+				</div>
+				<div class="col-6 col-md-4 col-lg-3">
+					<img
+						src="images/stock16.jpg"
+						class="img-thumbnail m-2"
+						data-bs-image="images/stock16.jpg"
+						data-bs-title="Sunset Road"
+						alt="Stock 16"
+					/>
+				</div>
+				<div class="col-6 col-md-4 col-lg-3">
+					<img
+						src="images/stock17.jpg"
+						class="img-thumbnail m-2"
+						data-bs-image="images/stock17.jpg"
+						data-bs-title="Galaxy"
+						alt="Stock 17"
+					/>
+				</div>
+				<div class="col-6 col-md-4 col-lg-3">
+					<img
+						src="images/stock18.jpg"
+						class="img-thumbnail m-2"
+						data-bs-image="images/stock18.jpg"
+						data-bs-title="Bridge at Night"
+						alt="Stock 18"
+					/>
+				</div>
+				<div class="col-6 col-md-4 col-lg-3">
+					<img
+						src="images/stock19.jpg"
+						class="img-thumbnail m-2"
+						data-bs-image="images/stock19.jpg"
+						data-bs-title="Bridge at Evening"
+						alt="Stock 19"
+					/>
+				</div>
+				<div class="col-6 col-md-4 col-lg-3">
+					<img
+						src="images/stock20.jpg"
+						class="img-thumbnail m-2"
+						data-bs-image="images/stock20.jpg"
+						data-bs-title="Clouds"
+						alt="Stock 20"
+					/>
+				</div>
+				<div class="col-6 col-md-4 col-lg-3">
+					<img
+						src="images/stock21.jpg"
+						class="img-thumbnail m-2"
+						data-bs-image="images/stock21.jpg"
+						data-bs-title="Farming Hillside"
+						alt="Stock 21"
+					/>
+				</div>
+				<div class="col-6 col-md-4 col-lg-3">
+					<img
+						src="images/stock22.jpg"
+						class="img-thumbnail m-2"
+						data-bs-image="images/stock22.jpg"
+						data-bs-title="Frozen Lake"
+						alt="Stock 22"
+					/>
+				</div>
+			</div>
+		</main>
+
+		<div
+			class="modal fade viewer-modal"
+			id="imageModal"
+			tabindex="-1"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+				<div class="modal-content">
+					<button class="img-prev-btn modal-nav-btn">&lt;</button>
+					<button class="img-next-btn modal-nav-btn">&gt;</button>
+
+					<div id="modal-image-title" class="modal-img-title"></div>
+
+					<div class="modal-body p-0 text-center">
+						<div class="viewer-stage">
+							<img
+								id="modalImage"
+								src=""
+								class="viewer-image"
+								alt=""
+								draggable="false"
+							/>
+						</div>
+
+						<div id="viewerTitle" class="viewer-title text-muted py-2"></div>
+
+						<div
+							class="d-flex justify-content-center gap-2 py-2 viewer-toolbar"
+						>
+							<button
+								class="btn btn-secondary btn-sm"
+								id="zoomOut"
+								title="Zoom out"
+							>
+								−
+							</button>
+							<button
+								class="btn btn-secondary btn-sm"
+								id="zoomIn"
+								title="Zoom in"
+							>
+								+
+							</button>
+							<button
+								class="btn btn-secondary btn-sm"
+								id="resetZoom"
+								title="Reset zoom"
+							>
+								⟲
+							</button>
+							<button
+								class="btn btn-secondary btn-sm"
+								id="maximizeBtn"
+								title="Maximize image"
+								aria-label="Maximize"
+							>
+								⤢
+							</button>
+							<button
+								class="btn btn-secondary btn-sm"
+								id="minimizeBtn"
+								title="Minimize image"
+								aria-label="Minimize"
+								style="display: none"
+							>
+								🗗
+							</button>
+							<button
+								class="btn btn-secondary btn-sm"
+								id="closeBtn"
+								title="Close viewer"
+								aria-label="Close"
+							>
+								✖
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div
+			class="modal fade"
+			id="helpModal"
+			tabindex="-1"
+			aria-labelledby="helpModalLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="helpModalLabel">
+							Help & Keyboard Shortcuts
+						</h5>
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-dismiss="modal"
+							aria-label="Close"
+						></button>
+					</div>
+					<div class="modal-body">
+						<p class="text-muted">
+							Keyboard shortcuts for viewer and page actions.
+						</p>
+						<table class="table table-sm">
+							<tbody>
+								<tr>
+									<td><strong>Enter / Click</strong></td>
+									<td>Open selected image</td>
+								</tr>
+								<tr>
+									<td><strong>+</strong></td>
+									<td>Zoom in</td>
+								</tr>
+								<tr>
+									<td><strong>-</strong></td>
+									<td>Zoom out</td>
+								</tr>
+								<tr>
+									<td><strong>0 / ⟲</strong></td>
+									<td>Reset zoom</td>
+								</tr>
+								<tr>
+									<td><strong>← / →</strong></td>
+									<td>Previous / Next image</td>
+								</tr>
+								<tr>
+									<td><strong>Esc</strong></td>
+									<td>Close viewer</td>
+								</tr>
+								<tr>
+									<td><strong>F</strong></td>
+									<td>Fullscreen image</td>
+								</tr>
+								<tr>
+									<td><strong>T</strong></td>
+									<td>Toggle theme</td>
+								</tr>
+								<tr>
+									<td><strong>H</strong></td>
+									<td>Open help</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<section id="contact" class="container my-5">
+			<h2 class="mb-4">Contact Us</h2>
+
+			<form id="contactForm" class="p-4 border rounded-3 shadow-sm bg-light">
+				<div class="mb-3">
+					<label for="name" class="form-label">Name</label>
+					<input
+						type="text"
+						class="form-control"
+						id="name"
+						placeholder="Enter your name"
+						required
+					/>
+				</div>
+
+				<div class="mb-3">
+  					<label for="contact" class="form-label">Contact Number</label>
+  					<input
+						type="number"
+						class="form-control"
+						id="contact"
+						placeholder="Enter your phone number"
+						oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10);"
+						required
+  					/>
+  					<div class="invalid-feedback" id="contactError"></div>
+				</div>
+
+
+
+				<div class="mb-3">
+					<label for="email" class="form-label">Email</label>
+					<input
+						type="email"
+						class="form-control"
+						id="email"
+						placeholder="Enter your email"
+						required
+					/>
+					<div class="invalid-feedback" id="emailError"></div>
+				</div>
+
+				<div class="mb-3">
+					<label for="issue" class="form-label">Issue</label>
+					<textarea
+						class="form-control"
+						id="issue"
+						rows="4"
+						placeholder="Describe your issue"
+						required
+					></textarea>
+					<div class="invalid-feedback" id="issueError"></div>
+				</div>
+
+				<button type="submit" class="btn btn-primary w-100">Submit</button>
+			</form>
+		</section>
+
+		<script src="gallery1script.js"></script>
+		<script>
+			document
+				.getElementById("contactForm")
+				.addEventListener("submit", function (e) {
+					e.preventDefault();
+					alert("Your response has been submitted.");
+					this.reset();
+				});
+		</script>
+		<script
+			src="https://unpkg.com/@panzoom/panzoom@9.5.1/dist/panzoom.min.js"
+			defer
+		></script>
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>
